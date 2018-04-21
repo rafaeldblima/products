@@ -1,0 +1,1 @@
+alter table product alter column preco type numeric using cast(preco as numeric)
