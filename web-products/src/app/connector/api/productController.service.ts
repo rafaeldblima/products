@@ -29,7 +29,7 @@ import {Configuration} from '../configuration';
 @Injectable()
 export class ProductControllerService {
 
-  protected basePath = 'https://localhost:9876';
+  protected basePath = 'http://localhost:9876';
   public defaultHeaders = new HttpHeaders();
   public configuration = new Configuration();
 

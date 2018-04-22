@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/product/")
 @Api(value = "Product Controller API", produces = MediaType.APPLICATION_JSON_VALUE)

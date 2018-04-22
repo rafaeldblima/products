@@ -1,0 +1,26 @@
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+  <div class="example-container">
+    <mat-form-field>
+      <input matInput placeholder="Descrição" formControlName="descricao">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input type="number" matInput placeholder="Preço" formControlName="preco">
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Origem">
+        <mat-option value="option">Nacional</mat-option>
+        <mat-option value="option">Importado</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-select placeholder="Categoria">
+        <mat-option *ngFor="let categoria of categorias" value="categoria.id">
+          {{categoria.descricao}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</form>
