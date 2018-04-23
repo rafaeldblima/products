@@ -1,7 +1,7 @@
-<form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="productForm" (ngSubmit)="onSubmit()" #f="ngForm">
   <div class="button-row">
     <button mat-raised-button color="warn" (click)="onCancel()">Cancelar</button>
-    <button mat-raised-button color="primary" type="submit">Salvar</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!f.valid">Salvar</button>
   </div>
   <h2>{{title}} Produto</h2>
   <div class="example-container">

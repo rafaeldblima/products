@@ -50,14 +50,14 @@ export class ProductFormComponent implements OnInit {
   private initForm() {
     this.productForm = new FormGroup({
       'descricao': new FormControl(this.produto.descricao, Validators.required),
-      'preco': new FormControl(this.produto.preco, Validators.required),
-      'categoria': new FormControl(this.produto.categoria.id, Validators.required),
+      'preco': new FormControl(this.produto.preco, Validators.min(0.001)),
+      'categoria': new FormControl(this.produto.categoria.id, Validators.nullValidator),
       'origem': new FormControl(this.produto.origem, Validators.required)
     });
   }
 
   onCancel() {
-    this.router.navigate(['../'], {relativeTo: this.route});
+    this.router.navigate(['products']);
   }
 
   onSubmit() {
@@ -71,7 +71,6 @@ export class ProductFormComponent implements OnInit {
       this.produto.dataCompra
     );
     product.id = this.id;
-    console.log(this.produto);
     if (this.editMode) {
       this.productService.updateProductUsingPUT((product))
         .subscribe((resp: model.Product) => {
