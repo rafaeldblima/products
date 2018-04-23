@@ -10,6 +10,7 @@ import { CoreModule } from './core/core.module';
 import { ProductsModule } from './products/products.module';
 import { AppRoutingModule } from './app-routing.module';
 import { MaterialModule } from './core/material.module';
+import { ProductsService } from './products/products.service';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { MaterialModule } from './core/material.module';
   ],
   providers: [
     ProductControllerService,
-    CategoryControllerService
+    CategoryControllerService,
+    ProductsService
   ],
   bootstrap: [AppComponent]
 })

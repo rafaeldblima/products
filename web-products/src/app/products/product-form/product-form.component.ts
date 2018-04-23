@@ -5,6 +5,7 @@ import * as model from './../../connector/model/models';
 import { CategoryControllerService, ProductControllerService } from '../../connector';
 import { ProductModel } from '../../model/product.model';
 import { CategoryModel } from '../../model/category.model';
+import { ProductsService } from '../products.service';
 
 @Component({
   selector: 'app-product-form',
@@ -17,42 +18,36 @@ export class ProductFormComponent implements OnInit {
   editMode = false;
   produto: ProductModel;
   productForm: FormGroup;
-  categorias: model.Category[];
   title: string;
+  categorias: model.Category[];
 
   constructor(private route: ActivatedRoute,
               private router: Router,
               private productService: ProductControllerService,
-              private categoriaService: CategoryControllerService) {
+              private service: ProductsService) {
   }
 
   ngOnInit() {
+    this.categorias = this.service.getCategorias();
     this.route.params.subscribe((params: Params) => {
       this.id = params['id'];
       this.editMode = params['id'] != null;
-      this.initForm();
       if (this.editMode) {
         this.title = 'Editar';
+        this.produto = this.service.getProduct();
       } else {
+        this.produto = new ProductModel(
+          '', 0, new CategoryModel(), 'Nacional', new Date()
+        );
         this.title = 'Adicionar';
       }
+      console.log(this.produto);
+      this.initForm();
     });
-    this.categoriaService.getAllCategoriesUsingGET()
-      .subscribe((resp: model.Category[]) => {
-        this.categorias = resp;
-      }, err => console.log(err));
   }
 
   private initForm() {
-    this.produto = new ProductModel(
-      '', 0, new CategoryModel(), 'Nacional', new Date()
-    );
-    if (this.editMode) {
-      this.productService.getBookByIdUsingGET(this.id).subscribe((resp: model.Product) => {
-        this.produto = resp;
-      }, err => console.log(err));
-    }
-
+    console.log(this.produto.categoria);
     this.productForm = new FormGroup({
       'descricao': new FormControl(this.produto.descricao, Validators.required),
       'preco': new FormControl(this.produto.preco, Validators.required),
@@ -78,14 +73,20 @@ export class ProductFormComponent implements OnInit {
     if (this.editMode) {
       this.productService.updateProductUsingPUT((product))
         .subscribe((resp: model.Product) => {
-          console.log(resp);
-        }, err => console.log(err));
+            console.log(resp);
+          }, err => console.log(err),
+          () => this.onComplete());
     } else {
       this.productService.createProductUsingPOST((product))
         .subscribe((resp: model.Product) => {
-          console.log(resp);
-        }, err => console.log(err));
+            console.log(resp);
+          }, err => console.log(err),
+          () => this.onComplete());
     }
+  }
+
+  onComplete() {
+    this.service.changed.emit(true);
     this.router.navigate(['../'], {relativeTo: this.route});
   }
 }
