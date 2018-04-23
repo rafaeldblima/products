@@ -1,5 +1,5 @@
 import { Component, OnChanges, OnInit, ViewChild } from '@angular/core';
-import { MatSort, MatTableDataSource } from '@angular/material';
+import { MatSnackBar, MatSort, MatTableDataSource } from '@angular/material';
 import { CategoryControllerService, ProductControllerService } from '../connector';
 import * as model from './../connector/model/models';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -23,7 +23,8 @@ export class ProductsComponent implements OnInit, OnChanges {
               private categoriaService: CategoryControllerService,
               private router: Router,
               private route: ActivatedRoute,
-              private service: ProductsService) {
+              private service: ProductsService,
+              public snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -59,25 +60,17 @@ export class ProductsComponent implements OnInit, OnChanges {
     }
   }
 
-  applyFilter(filterValue
-                :
-                string
-  ) {
+  applyFilter(filterValue: string) {
     filterValue = filterValue.trim();
     filterValue = filterValue.toLowerCase();
     this.dataSource.filter = filterValue;
   }
 
   addNew() {
-
     this.router.navigate(['new'], {relativeTo: this.route});
   }
 
-  startEdit(id
-              :
-              number
-  ) {
-
+  startEdit(id: number) {
     this.productService.getBookByIdUsingGET(id).subscribe((resp: model.Product) => {
         this.service.setProduct(resp);
       }, err => console.log(err),
@@ -86,16 +79,15 @@ export class ProductsComponent implements OnInit, OnChanges {
       });
   }
 
-  deleteItem(id
-               :
-               number
-  ) {
+  deleteItem(id: number) {
     this.productService.deleteProductUsingDELETE(id)
       .subscribe((resp: model.Product) => {
           console.log(resp);
         },
-        err => console.log(err)
-      );
+        err => console.log(err),
+        () => this.snackBar.open('Deletado!', 'x', {
+          duration: 1500
+        }));
     const index = this.products.findIndex(prod => prod.id === id);
     this.products.splice(index, 1);
     this.dataSource.filter = '';

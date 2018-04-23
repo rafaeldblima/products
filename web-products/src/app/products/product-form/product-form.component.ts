@@ -6,6 +6,7 @@ import { CategoryControllerService, ProductControllerService } from '../../conne
 import { ProductModel } from '../../model/product.model';
 import { CategoryModel } from '../../model/category.model';
 import { ProductsService } from '../products.service';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-product-form',
@@ -24,7 +25,8 @@ export class ProductFormComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private productService: ProductControllerService,
-              private service: ProductsService) {
+              private service: ProductsService,
+              public snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
@@ -41,13 +43,11 @@ export class ProductFormComponent implements OnInit {
         );
         this.title = 'Adicionar';
       }
-      console.log(this.produto);
       this.initForm();
     });
   }
 
   private initForm() {
-    console.log(this.produto.categoria);
     this.productForm = new FormGroup({
       'descricao': new FormControl(this.produto.descricao, Validators.required),
       'preco': new FormControl(this.produto.preco, Validators.required),
@@ -70,6 +70,8 @@ export class ProductFormComponent implements OnInit {
       this.productForm.value['origem'],
       this.produto.dataCompra
     );
+    product.id = this.id;
+    console.log(this.produto);
     if (this.editMode) {
       this.productService.updateProductUsingPUT((product))
         .subscribe((resp: model.Product) => {
@@ -86,7 +88,10 @@ export class ProductFormComponent implements OnInit {
   }
 
   onComplete() {
+    this.snackBar.open('Salvo com sucesso!', 'x', {
+      duration: 1500
+    });
     this.service.changed.emit(true);
-    this.router.navigate(['../'], {relativeTo: this.route});
+    this.router.navigate(['products']);
   }
 }
