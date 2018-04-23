@@ -1,4 +1,9 @@
 <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+  <div class="button-row">
+    <button mat-raised-button color="warn" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" type="submit">Salvar</button>
+  </div>
+  <h2>{{title}} Produto</h2>
   <div class="example-container">
     <mat-form-field>
       <input matInput placeholder="Descrição" formControlName="descricao">
@@ -9,15 +14,15 @@
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select placeholder="Origem">
+      <mat-select placeholder="Origem" formControlName="origem">
         <mat-option value="option">Nacional</mat-option>
         <mat-option value="option">Importado</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-form-field>
-      <mat-select placeholder="Categoria">
-        <mat-option *ngFor="let categoria of categorias" value="categoria.id">
+      <mat-select placeholder="Categoria" formControlName="categoria">
+        <mat-option *ngFor="let categoria of categorias" value="{{categoria.id}}">
           {{categoria.descricao}}
         </mat-option>
       </mat-select>

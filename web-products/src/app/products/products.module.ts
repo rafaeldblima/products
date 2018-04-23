@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { ProductFormComponent } from './product-form/product-form.component';
 import { MaterialModule } from '../core/material.module';
+import { CategoryControllerService } from '../connector';
 
 @NgModule({
   imports: [

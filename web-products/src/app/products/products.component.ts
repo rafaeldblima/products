@@ -28,7 +28,7 @@ export class ProductsComponent implements OnInit, AfterViewInit {
         this.products = resp;
         this.dataSource = new MatTableDataSource<model.Product>(this.products);
         this.dataSource.sort = this.sort;
-      });
+      }, err => console.log(err));
   }
 
   ngAfterViewInit() {
@@ -52,6 +52,6 @@ export class ProductsComponent implements OnInit, AfterViewInit {
     this.productService.deleteProductUsingDELETE(id)
       .subscribe((resp: model.Product) => {
         console.log(resp);
-      });
+      }, err => console.log(err));
   }
 }

@@ -17,7 +17,8 @@ export class ProductFormComponent implements OnInit {
   editMode = false;
   produto: ProductModel;
   productForm: FormGroup;
-  categorias: CategoryModel[];
+  categorias: model.Category[];
+  title: string;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -30,11 +31,16 @@ export class ProductFormComponent implements OnInit {
       this.id = params['id'];
       this.editMode = params['id'] != null;
       this.initForm();
+      if (this.editMode) {
+        this.title = 'Editar';
+      } else {
+        this.title = 'Adicionar';
+      }
     });
     this.categoriaService.getAllCategoriesUsingGET()
       .subscribe((resp: model.Category[]) => {
         this.categorias = resp;
-      });
+      }, err => console.log(err));
   }
 
   private initForm() {
@@ -44,7 +50,7 @@ export class ProductFormComponent implements OnInit {
     if (this.editMode) {
       this.productService.getBookByIdUsingGET(this.id).subscribe((resp: model.Product) => {
         this.produto = resp;
-      });
+      }, err => console.log(err));
     }
 
     this.productForm = new FormGroup({
@@ -60,7 +66,7 @@ export class ProductFormComponent implements OnInit {
   }
 
   onSubmit() {
-    let category = new CategoryModel();
+    const category = new CategoryModel();
     category.id = this.productForm.value['categoria'];
     const product = new ProductModel(
       this.productForm.value['descricao'],
@@ -70,15 +76,16 @@ export class ProductFormComponent implements OnInit {
       this.produto.dataCompra
     );
     if (this.editMode) {
-      this.productService.updateProductUsingPUT(product)
+      this.productService.updateProductUsingPUT((product))
         .subscribe((resp: model.Product) => {
           console.log(resp);
-        });
+        }, err => console.log(err));
     } else {
-      this.productService.createProductUsingPOST(product)
+      this.productService.createProductUsingPOST((product))
         .subscribe((resp: model.Product) => {
           console.log(resp);
-        });
+        }, err => console.log(err));
     }
+    this.router.navigate(['../'], {relativeTo: this.route});
   }
 }
